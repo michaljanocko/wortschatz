@@ -1,12 +1,14 @@
 {
   "name": "wortschatz",
   "version": "1.0.0",
-  "description": "Lernen wie du das magst",
+  "description": "Lernen, wie es dir gefällt",
   "repository": "https://github.com/michaljanocko/wortschatz",
   "author": "Michal Janočko <michal@janocko.com>",
   "license": "MIT",
+  "source": "index.html",
   "scripts": {
-    "dev": "parcel index.html"
+    "dev": "parcel",
+    "build": "parcel build --no-cache"
   },
   "devDependencies": {
     "@parcel/transformer-elm": "2.5.0",
