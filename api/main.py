@@ -2,8 +2,11 @@ import os
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.exceptions import HTTPException
 import httpx
 
+DIST_FOLDER = os.getenv("DIST_FOLDER")
+NOTION_SECRET = os.getenv("NOTION_SECRET")
 
 app = FastAPI()
 
@@ -18,18 +21,15 @@ async def token(code: str) -> str:
                 "redirect_uri": "https://wortschatz.cz/notion/callback",
                 "code": code,
             },
-            auth=(
-                "fce9c87e-3860-47c6-b9a6-65ffc789a2b8",
-                os.getenv("NOTION_SECRET"),
-            ),
+            auth=("fce9c87e-3860-47c6-b9a6-65ffc789a2b8", NOTION_SECRET),
         )
 
         return response.json()
 
 
-@app.get("/")
-async def index() -> FileResponse:
-    return FileResponse("/dist/index.html")
+@app.exception_handler(404)
+async def index(_, __) -> FileResponse:
+    return FileResponse(f"{DIST_FOLDER}/index.html")
 
 
-app.mount("/", StaticFiles(directory="/dist"))
+app.mount("/", StaticFiles(directory=DIST_FOLDER))
